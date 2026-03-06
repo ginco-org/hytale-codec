@@ -10,7 +10,7 @@ subprojects {
     group = rootProject.group
     version = rootProject.version
 
-    kotlin { jvmToolchain(25) }
+    extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> { jvmToolchain(25) }
 
     publishing {
         repositories {

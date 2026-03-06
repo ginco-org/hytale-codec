@@ -16,7 +16,7 @@ subprojects {
         repositories {
             maven {
                 name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/OWNER/hytale-codec")
+                url = uri("https://maven.pkg.github.com/ginco-org/hytale-codec")
                 credentials {
                     username = System.getenv("GITHUB_ACTOR")
                     password = System.getenv("GITHUB_TOKEN")

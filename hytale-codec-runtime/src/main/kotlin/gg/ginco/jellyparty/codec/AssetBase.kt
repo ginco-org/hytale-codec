@@ -5,7 +5,7 @@ import com.hypixel.hytale.assetstore.map.DefaultAssetMap
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap
 
 abstract class AssetBase<T : AssetBase<T>> : JsonAssetWithMap<String, DefaultAssetMap<String, T>> {
-    var data: AssetExtraInfo.Data? = null
+    var _data: AssetExtraInfo.Data? = null
     var _id: String? = null
     override fun getId(): String = _id ?: throw IllegalStateException("${this::class.simpleName} ID not set")
 }

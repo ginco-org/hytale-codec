@@ -1,6 +1,18 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+
 plugins {
-    kotlin("jvm") version "2.3.0" apply false
+    kotlin("jvm") version "2.3.10" apply false
     `maven-publish`
+}
+
+allprojects {
+    // kotlin-compiler-embeddable declares kotlin-reflect:1.6.10 as a runtime dependency.
+    // This forces the correct version matching our Kotlin plugin version.
+    configurations.whenObjectAdded {
+        if (name == "kotlinCompilerClasspath") {
+            resolutionStrategy.force("org.jetbrains.kotlin:kotlin-reflect:2.3.10")
+        }
+    }
 }
 
 subprojects {
@@ -10,7 +22,7 @@ subprojects {
     group = rootProject.group
     version = rootProject.version
 
-    extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> { jvmToolchain(25) }
+    extensions.configure<KotlinJvmProjectExtension> { jvmToolchain(25) }
 
     publishing {
         repositories {

@@ -116,7 +116,7 @@ class CodecVisitor(
                 it.isMutable &&
                 !it.annotations.any { a -> a.shortName.asString() == "SerialIgnore" } &&
                 it.simpleName.asString() != "_id" &&
-                it.simpleName.asString() != "_data"
+                it.simpleName.asString() != "data"
             }
             .toList()
 
@@ -168,8 +168,8 @@ class CodecVisitor(
         appendLine("    Codec.STRING,")
         appendLine("    { asset, key -> asset._id = key },")
         appendLine("    { asset -> asset._id },")
-        appendLine("    { asset, data -> asset._data = data },")
-        appendLine("    { asset -> asset._data }")
+        appendLine("    { asset, data -> asset.data = data },")
+        appendLine("    { asset -> asset.data }")
         append(")")
 
         appendFields(fieldInfos)

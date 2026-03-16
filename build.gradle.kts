@@ -26,7 +26,7 @@ subprojects {
     extensions.configure<KotlinJvmProjectExtension> { jvmToolchain(25) }
 
     extensions.configure<com.vanniktech.maven.publish.MavenPublishBaseExtension> {
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
         signAllPublications()
 
         pom {

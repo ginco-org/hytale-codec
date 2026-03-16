@@ -12,31 +12,45 @@ KSP-based codec generation for Hytale assets. Annotate your asset classes and le
 
 ## Setup
 
-### 1. Add the repository
+### 1. GitHub Packages credentials
+
+Add to `~/.gradle/gradle.properties` (not your project — keep credentials out of source control):
+
+```properties
+githubActor=your-github-username
+githubToken=your-PAT-with-read:packages
+```
+
+### 2. Add the repository
 
 In your project's `settings.gradle.kts`:
 
 ```kotlin
 dependencyResolutionManagement {
     repositories {
-        maven { url = uri("https://jitpack.io") }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ginco-org/hytale-codec")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR") ?: providers.gradleProperty("githubActor").orNull
+                password = System.getenv("GITHUB_TOKEN") ?: providers.gradleProperty("githubToken").orNull
+            }
+        }
     }
 }
 ```
 
-### 2. Add dependencies
+### 3. Add dependencies
 
 In `build.gradle.kts`, alongside the KSP plugin (`id("com.google.devtools.ksp")`):
 
 ```kotlin
 dependencies {
-    implementation("gg.ginco:hytale-codec-annotations:v1.0.4")
-    implementation("gg.ginco:hytale-codec-runtime:v1.0.4")
-    ksp("gg.ginco:hytale-codec-processor:v1.0.4")
+    implementation("gg.ginco:hytale-codec-annotations:1.0.5")
+    implementation("gg.ginco:hytale-codec-runtime:1.0.5")
+    ksp("gg.ginco:hytale-codec-processor:1.0.5")
 }
 ```
-
-Replace `v1.0.4` with the desired release tag. You can also use a specific commit hash or `main-SNAPSHOT` for the latest unreleased build.
 
 ## Usage
 
@@ -127,4 +141,4 @@ git tag v1.0.4
 git push origin main v1.0.4
 ```
 
-JitPack automatically builds and serves the release when the tag is pushed. No manual publish step is needed — consumers can start using the new version immediately after the tag exists on GitHub.
+The GitHub Actions workflow publishes all three artifacts to GitHub Packages automatically.

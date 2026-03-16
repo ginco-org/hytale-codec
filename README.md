@@ -1,4 +1,6 @@
 # hytale-codec
+![Maven Central Version](https://img.shields.io/maven-central/v/gg.ginco/hytale-codec-annotations)
+
 
 KSP-based codec generation for Hytale assets. Annotate your asset classes and let the processor generate the boilerplate `AssetBuilderCodec` and `BuilderCodec` wiring at compile time.
 

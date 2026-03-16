@@ -1,8 +1,3 @@
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = "hytale-codec-annotations"
-            from(components["kotlin"])
-        }
-    }
+mavenPublishing {
+    coordinates(artifactId = "hytale-codec-annotations")
 }

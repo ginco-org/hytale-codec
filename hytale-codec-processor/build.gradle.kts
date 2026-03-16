@@ -8,11 +8,6 @@ dependencies {
     compileOnly("com.hypixel.hytale:Server:${server_version}")
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = "hytale-codec-processor"
-            from(components["kotlin"])
-        }
-    }
+mavenPublishing {
+    coordinates(artifactId = "hytale-codec-processor")
 }

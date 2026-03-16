@@ -1,8 +1,9 @@
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 plugins {
     kotlin("jvm") version "2.3.10" apply false
-    `maven-publish`
+    id("com.vanniktech.maven.publish") version "0.30.0" apply false
 }
 
 allprojects {
@@ -17,22 +18,38 @@ allprojects {
 
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "maven-publish")
+    apply(plugin = "com.vanniktech.maven.publish")
 
     group = rootProject.group
     version = rootProject.version
 
     extensions.configure<KotlinJvmProjectExtension> { jvmToolchain(25) }
 
-    publishing {
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/ginco-org/hytale-codec")
-                credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
+    extensions.configure<com.vanniktech.maven.publish.MavenPublishBaseExtension> {
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        signAllPublications()
+
+        pom {
+            name = project.name
+            description = "Kotlin codec framework for Hytale"
+            url = "https://github.com/ginco-org/hytale-codec"
+            licenses {
+                license {
+                    name = "Apache-2.0"
+                    url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
                 }
+            }
+            developers {
+                developer {
+                    id = "ginco"
+                    name = "GINCo"
+                    url = "https://ginco.gg"
+                }
+            }
+            scm {
+                connection = "scm:git:git://github.com/ginco-org/hytale-codec.git"
+                developerConnection = "scm:git:ssh://github.com/ginco-org/hytale-codec.git"
+                url = "https://github.com/ginco-org/hytale-codec"
             }
         }
     }

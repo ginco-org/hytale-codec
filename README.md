@@ -12,35 +12,7 @@ KSP-based codec generation for Hytale assets. Annotate your asset classes and le
 
 ## Setup
 
-### 1. GitHub Packages credentials
-
-Add to `~/.gradle/gradle.properties` (not your project — keep credentials out of source control):
-
-```properties
-githubActor=your-github-username
-githubToken=your-PAT-with-read:packages
-```
-
-### 2. Add the repository
-
-In your project's `settings.gradle.kts`:
-
-```kotlin
-dependencyResolutionManagement {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ginco-org/hytale-codec")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR") ?: providers.gradleProperty("githubActor").orNull
-                password = System.getenv("GITHUB_TOKEN") ?: providers.gradleProperty("githubToken").orNull
-            }
-        }
-    }
-}
-```
-
-### 3. Add dependencies
+### 1. Add dependencies
 
 In `build.gradle.kts`, alongside the KSP plugin (`id("com.google.devtools.ksp")`):
 
@@ -141,4 +113,4 @@ git tag v1.0.4
 git push origin main v1.0.4
 ```
 
-The GitHub Actions workflow publishes all three artifacts to GitHub Packages automatically.
+The GitHub Actions workflow publishes all three artifacts to Maven Central automatically.

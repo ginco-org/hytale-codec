@@ -278,7 +278,7 @@ class CodecVisitor(
                 val decl = typeName.declaration
                 if (decl is KSClassDeclaration && decl.classKind == ClassKind.ENUM_CLASS) {
                     FieldCodecInfo(
-                        "EnumCodec(${typeName.toTypeName()}::class.java)",
+                        "EnumCodec(${typeName.makeNotNullable().toTypeName()}::class.java)",
                         defaultSetter(propName),
                         defaultGetter(propName),
                         listOf("com.hypixel.hytale.codec.codecs.EnumCodec")

@@ -103,7 +103,15 @@ class CodecVisitor(
     companion object {
         private val PROTOCOL_IMPORTS = listOf(
             "com.hypixel.hytale.protocol.*",
-            "com.hypixel.hytale.server.core.codec.ProtocolCodecs"
+            "com.hypixel.hytale.server.core.codec.ProtocolCodecs",
+            "com.hypixel.hytale.math.vector.Vector2fUtil",
+            "com.hypixel.hytale.math.vector.Vector3fUtil",
+            "com.hypixel.hytale.math.vector.Vector3dUtil",
+            "com.hypixel.hytale.math.vector.Vector3iUtil",
+            "org.joml.Vector2f",
+            "org.joml.Vector3f",
+            "org.joml.Vector3d",
+            "org.joml.Vector3i"
         )
     }
 
@@ -263,13 +271,18 @@ class CodecVisitor(
             }
             "com.hypixel.hytale.protocol.Direction" ->
                 FieldCodecInfo("ProtocolCodecs.DIRECTION", defaultSetter(propName), defaultGetter(propName), PROTOCOL_IMPORTS)
-            "com.hypixel.hytale.protocol.Vector3f" ->
-                FieldCodecInfo("ProtocolCodecs.VECTOR3F", defaultSetter(propName), defaultGetter(propName), PROTOCOL_IMPORTS)
-            "com.hypixel.hytale.protocol.Vector2f" ->
-                FieldCodecInfo("ProtocolCodecs.VECTOR2F", defaultSetter(propName), defaultGetter(propName), PROTOCOL_IMPORTS)
+            // JOML vector types (0.5+)
+            "org.joml.Vector3f" ->
+                FieldCodecInfo("Vector3fUtil.CODEC", defaultSetter(propName), defaultGetter(propName), PROTOCOL_IMPORTS)
+            "org.joml.Vector2f" ->
+                FieldCodecInfo("Vector2fUtil.CODEC", defaultSetter(propName), defaultGetter(propName), PROTOCOL_IMPORTS)
+            "org.joml.Vector3d" ->
+                FieldCodecInfo("Vector3dUtil.CODEC", defaultSetter(propName), defaultGetter(propName), PROTOCOL_IMPORTS)
+            "org.joml.Vector3i" ->
+                FieldCodecInfo("Vector3iUtil.CODEC", defaultSetter(propName), defaultGetter(propName), PROTOCOL_IMPORTS)
             "com.hypixel.hytale.protocol.Position" ->
                 FieldCodecInfo(
-                    "ProtocolCodecs.VECTOR3F",
+                    "Vector3fUtil.CODEC",
                     "{ obj, value -> obj.$propName = Position(value.x.toDouble(), value.y.toDouble(), value.z.toDouble()) }",
                     "{ obj -> obj.$propName?.let { Vector3f(it.x.toFloat(), it.y.toFloat(), it.z.toFloat()) } }",
                     PROTOCOL_IMPORTS

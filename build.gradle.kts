@@ -17,6 +17,9 @@ allprojects {
 }
 
 subprojects {
+    // processor-test is a compile-and-test harness for the processor, not a published artifact
+    if (name == "processor-test") return@subprojects
+
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "com.vanniktech.maven.publish")
 

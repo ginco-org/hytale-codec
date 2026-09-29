@@ -264,7 +264,18 @@ class CodecVisitor(
                         listField("ArrayCodec(${el}Codec) { size -> arrayOfNulls<$el>(size) }", propName)
                     el == "java.util.UUID" ->
                         listField("ArrayCodec(Codec.UUID_STRING) { size -> arrayOfNulls<java.util.UUID>(size) }", propName)
-                    else -> listField("Codec.STRING_ARRAY", propName, imports = emptyList())
+                    else -> {
+                        // Silent STRING_ARRAY degradation corrupts object and
+                        // numeric lists at RUNTIME (decode throws or drops
+                        // data) — a build-time error is the honest failure.
+                        logger.error(
+                            "Property '$propName': List<$el> is not supported. " +
+                            "Supported list elements: String, UUID, Int, Double, Float, " +
+                            "and @SerializableObject/@SerializableAsset classes.",
+                            property
+                        )
+                        listField("Codec.STRING_ARRAY", propName, imports = emptyList())
+                    }
                 }
             }
             "kotlin.Array" -> {

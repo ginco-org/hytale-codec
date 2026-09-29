@@ -256,9 +256,16 @@ class CodecVisitor(
             "kotlin.Double"  -> simple("Codec.DOUBLE", propName)
             "kotlin.Boolean" -> simple("Codec.BOOLEAN", propName)
             "kotlin.IntArray" -> simple("Codec.INT_ARRAY", propName)
-            "kotlin.collections.List" -> {
+            "java.util.UUID" -> simple("Codec.UUID_STRING", propName)
+            "kotlin.collections.List", "kotlin.collections.MutableList" -> {
                 val el = elementType(typeName)
-                simple(if (el == "kotlin.String") "Codec.STRING_ARRAY" else "Codec.STRING_ARRAY", propName)
+                when {
+                    isSerializableElement(elementTypeDeclaration(typeName)) ->
+                        listField("ArrayCodec(${el}Codec) { size -> arrayOfNulls<$el>(size) }", propName)
+                    el == "java.util.UUID" ->
+                        listField("ArrayCodec(Codec.UUID_STRING) { size -> arrayOfNulls<java.util.UUID>(size) }", propName)
+                    else -> listField("Codec.STRING_ARRAY", propName, imports = emptyList())
+                }
             }
             "kotlin.Array" -> {
                 val el = elementType(typeName)
@@ -306,11 +313,30 @@ class CodecVisitor(
     private fun simple(codec: String, propName: String) =
         FieldCodecInfo(codec, defaultSetter(propName), defaultGetter(propName))
 
+    private fun listField(
+        codec: String,
+        propName: String,
+        imports: List<String> = listOf("com.hypixel.hytale.codec.codecs.array.ArrayCodec")
+    ) = FieldCodecInfo(
+        codec,
+        "{ obj, value -> obj.$propName = value.toMutableList() }",
+        "{ obj -> obj.$propName.toTypedArray() }",
+        imports
+    )
+
     private fun defaultSetter(propName: String) = "{ obj, value -> obj.$propName = value }"
     private fun defaultGetter(propName: String) = "{ obj -> obj.$propName }"
 
     private fun elementType(typeName: KSType) =
         typeName.arguments.firstOrNull()?.type?.resolve()?.declaration?.qualifiedName?.asString()
+
+    private fun elementTypeDeclaration(typeName: KSType): KSDeclaration? =
+        typeName.arguments.firstOrNull()?.type?.resolve()?.declaration
+
+    private fun isSerializableElement(declaration: KSDeclaration?): Boolean =
+        declaration is KSClassDeclaration && declaration.annotations.any {
+            it.shortName.asString() == "SerializableObject" || it.shortName.asString() == "SerializableAsset"
+        }
 }
 
 class CodecProcessorProvider : SymbolProcessorProvider {

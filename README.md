@@ -88,7 +88,10 @@ class Thing : AssetBase<Thing>() {
 Auto-detected without any annotation:
 
 - `String`, `Int`, `Float`, `Double`, `Boolean`
+- `UUID` (encoded as its string form)
 - `IntArray`, `Array<String>`, `List<String>`
+- `List<UUID>` / `MutableList<UUID>` (array of string UUIDs)
+- `List<T>` / `MutableList<T>` where `T` is itself a `@SerializableObject` or `@SerializableAsset` class (an `ArrayCodec` wrapping `T`'s generated codec; works across packages)
 - Enums (generates an `EnumCodec`)
 - `Vector3f`, `Vector2f`, `Direction`, `Position` (Hytale protocol types)
 

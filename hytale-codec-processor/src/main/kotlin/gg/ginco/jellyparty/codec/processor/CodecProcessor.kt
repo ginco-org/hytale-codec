@@ -260,6 +260,8 @@ class CodecVisitor(
             "kotlin.collections.List", "kotlin.collections.MutableList" -> {
                 val el = elementType(typeName)
                 when {
+                    el == "kotlin.String" ->
+                        listField("Codec.STRING_ARRAY", propName, imports = emptyList())
                     isSerializableElement(elementTypeDeclaration(typeName)) ->
                         listField("ArrayCodec(${el}Codec) { size -> arrayOfNulls<$el>(size) }", propName)
                     el == "java.util.UUID" ->

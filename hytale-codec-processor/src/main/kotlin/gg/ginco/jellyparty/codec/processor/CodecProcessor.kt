@@ -262,6 +262,12 @@ class CodecVisitor(
                 when {
                     el == "kotlin.String" ->
                         listField("Codec.STRING_ARRAY", propName, imports = emptyList())
+                    el == "kotlin.Int" ->
+                        listField("Codec.INT_ARRAY", propName, imports = emptyList(), toArray = "toIntArray")
+                    el == "kotlin.Double" ->
+                        listField("Codec.DOUBLE_ARRAY", propName, imports = emptyList(), toArray = "toDoubleArray")
+                    el == "kotlin.Float" ->
+                        listField("Codec.FLOAT_ARRAY", propName, imports = emptyList(), toArray = "toFloatArray")
                     isSerializableElement(elementTypeDeclaration(typeName)) ->
                         listField("ArrayCodec(${el}Codec) { size -> arrayOfNulls<$el>(size) }", propName)
                     el == "java.util.UUID" ->
@@ -329,11 +335,12 @@ class CodecVisitor(
     private fun listField(
         codec: String,
         propName: String,
-        imports: List<String> = listOf("com.hypixel.hytale.codec.codecs.array.ArrayCodec")
+        imports: List<String> = listOf("com.hypixel.hytale.codec.codecs.array.ArrayCodec"),
+        toArray: String = "toTypedArray"
     ) = FieldCodecInfo(
         codec,
         "{ obj, value -> obj.$propName = value.toMutableList() }",
-        "{ obj -> obj.$propName.toTypedArray() }",
+        "{ obj -> obj.$propName.$toArray() }",
         imports
     )
 

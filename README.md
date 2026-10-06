@@ -90,6 +90,7 @@ Auto-detected without any annotation:
 - `String`, `Int`, `Float`, `Double`, `Boolean`
 - `UUID` (encoded as its string form)
 - `IntArray`, `Array<String>`, `List<String>`
+- `List<Int>` / `List<Double>` / `List<Float>` (and `MutableList` variants; encoded as int/double/float arrays)
 - `List<UUID>` / `MutableList<UUID>` (array of string UUIDs)
 - `List<T>` / `MutableList<T>` where `T` is itself a `@SerializableObject` or `@SerializableAsset` class (an `ArrayCodec` wrapping `T`'s generated codec; works across packages)
 - Enums (generates an `EnumCodec`)
